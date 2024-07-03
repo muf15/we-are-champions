@@ -1,0 +1,145 @@
+html, body {
+    margin: 0 auto;
+    padding: 0;
+    background-color: #1b1924;
+    color: #fffefe;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    max-width: 320px;
+    margin-top: 10px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#img-icon {
+    height: 100px;
+}
+
+#title {
+    font-size: 30px;
+}
+
+#input-endorsement {
+    background-color: #444158;
+    color: #fffefe;
+    border: none;
+    height: 80px;
+    width: 320px;
+    border-radius: 5px;
+    text-align: center;
+    text-wrap: nowrap;
+}
+
+input:focus {
+    outline: none;
+}
+
+input::placeholder {
+    color: #aaa;  
+}
+
+#input-from, #input-to {
+    margin-top: 10px;
+    background-color: #444158;
+    color: #fffefe;
+    border: none;
+    height: 40px;
+    width: 155px;
+    border-radius: 5px;
+    text-align: center;
+    display: inline;
+}
+
+#publish {
+    background-color: #28a9f1;
+    color: #fffefe;
+    border-radius: 5px;
+    border: none;
+    width: 320px;
+    margin-top: 10px;
+    padding: 10px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    color: #1b1924;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+#publish:hover {
+    background-color: #1e8ed1;
+}
+
+#endorsements {
+    margin: auto;
+}
+
+#endorsements-heading {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#user-endorse {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: space-around;
+    align-items: center;
+    user-select: none;
+}
+
+.full-message {
+    background-color: #fffefe;
+    color: #1b1924;  
+    border-radius: 2px;
+    font-weight: lighter;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 320px;
+    padding: 10px 0;
+    margin: 5px auto;
+    position: relative;
+}
+
+.full-message:hover {
+    background-color: gray;
+}
+
+h4 {
+    margin: 0 10px 2px;
+    padding: 4px;
+    text-align: left;
+}
+
+p {
+    margin: 0 10px;
+    text-align: left;
+    padding:4px;
+}
+
+#empty-message {
+    color: gray;
+    font-size: 14px;
+}
+
+.like-button {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: red;
+}
+
+.like-button.liked {
+    color: darkred;
+}
+
+/* Palette
+#1b1924, #444158, #28a9f1, #fffefe, #04121d 
+*/
