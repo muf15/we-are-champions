@@ -49,7 +49,8 @@ publishButtonEl.addEventListener("click", function () {
             from: fromValue,
             to: toValue,
             endorsement: endorsementValue,
-            likes: {} // Initialize empty likes object
+            likes: {}, // Initialize empty likes object
+            likeCount: 0 // Initialize like count
         });
         clearInputFields();
     }
@@ -97,36 +98,48 @@ function appendMessageToEndorsementList(endorsementId, endorsementData) {
     let fromEl = document.createElement("h4");
     fromEl.textContent = `From: ${endorsementData.from}`;
 
+    let likeContainer = document.createElement("div");
+    likeContainer.className = "like-container";
+
     let likeButton = document.createElement("i");
     likeButton.className = `fa-heart like-button ${endorsementData.likes && endorsementData.likes[userId] ? 'fas liked' : 'far'}`;
     likeButton.addEventListener("click", function (event) {
         event.stopPropagation();
-        toggleLike(endorsementId, endorsementData.likes);
+        toggleLike(endorsementId, endorsementData.likes, endorsementData);
     });
 
     newDiv.addEventListener("dblclick", function () {
-        toggleLike(endorsementId, endorsementData.likes);
+        toggleLike(endorsementId, endorsementData.likes, endorsementData);
     });
+
+    let likeCountEl = document.createElement("span");
+    likeCountEl.textContent = endorsementData.likeCount; // Display like count
+    likeCountEl.className = "like-count";
+
+    likeContainer.appendChild(likeButton);
+    likeContainer.appendChild(likeCountEl);
 
     newDiv.appendChild(toEl);
     newDiv.appendChild(endorsementEl);
     newDiv.appendChild(fromEl);
-    newDiv.appendChild(likeButton);
+    newDiv.appendChild(likeContainer);
 
     userEndorseEl.appendChild(newDiv);
 }
 
 // Function to toggle like/unlike
-function toggleLike(endorsementId, likes) {
+function toggleLike(endorsementId, likes, endorsementData) {
     if (!likes || !likes[userId]) {
         // User hasn't liked, so like it
         const updates = {};
         updates[`endorsementList/${endorsementId}/likes/${userId}`] = true;
+        updates[`endorsementList/${endorsementId}/likeCount`] = (endorsementData.likeCount || 0) + 1; // Increment like count
         update(ref(database), updates);
     } else {
         // User already liked, so unlike it
         const updates = {};
         updates[`endorsementList/${endorsementId}/likes/${userId}`] = null;
+        updates[`endorsementList/${endorsementId}/likeCount`] = (endorsementData.likeCount || 0) - 1; // Decrement like count
         update(ref(database), updates);
     }
 }
