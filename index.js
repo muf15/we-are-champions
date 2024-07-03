@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+import { getDatabase, ref, push, onValue, update } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 
 // Firebase configuration
 const appSettings = {
@@ -22,6 +22,7 @@ const emptyMessageEl = document.getElementById("empty-message");
 // Get or set a unique user ID in localStorage
 const userId = localStorage.getItem("userId") || (localStorage.setItem("userId", generateUUID()), localStorage.getItem("userId"));
 
+// Function to generate a UUID (Unique User ID)
 function generateUUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
@@ -44,7 +45,12 @@ publishButtonEl.addEventListener("click", function () {
     let endorsementValue = inputEndorsementEl.value.trim();
 
     if (fromValue !== "" && toValue !== "" && endorsementValue !== "") {
-        push(endorsementListInDB, { from: fromValue, to: toValue, endorsement: endorsementValue, likes: {} });
+        push(endorsementListInDB, {
+            from: fromValue,
+            to: toValue,
+            endorsement: endorsementValue,
+            likes: {} // Initialize empty likes object
+        });
         clearInputFields();
     }
 });
@@ -52,15 +58,13 @@ publishButtonEl.addEventListener("click", function () {
 // Real-time listener for endorsement list updates
 onValue(endorsementListInDB, function (snapshot) {
     if (snapshot.exists()) {
-        let messageArray = Object.entries(snapshot.val());
-
+        let endorsements = snapshot.val();
         clearEndorsementList();
         emptyMessageEl.style.display = "none";
 
-        for (let i = 0; i < messageArray.length; i++) {
-            let currentMessage = messageArray[i];
-            appendMessageToEndorsementList(currentMessage);
-        }
+        Object.keys(endorsements).forEach((key) => {
+            appendMessageToEndorsementList(key, endorsements[key]);
+        });
     } else {
         clearEndorsementList();
         emptyMessageEl.style.display = "block";
@@ -80,48 +84,49 @@ function clearInputFields() {
 }
 
 // Append a message to the endorsement list
-function appendMessageToEndorsementList(message) {
-    let messageID = message[0];
-    let messageValue = message[1];
-
+function appendMessageToEndorsementList(endorsementId, endorsementData) {
     let newDiv = document.createElement("div");
     newDiv.className = "full-message";
 
     let toEl = document.createElement("h4");
-    toEl.textContent = `To: ${messageValue.to}`;
+    toEl.textContent = `To: ${endorsementData.to}`;
 
     let endorsementEl = document.createElement("p");
-    endorsementEl.textContent = messageValue.endorsement;
+    endorsementEl.textContent = endorsementData.endorsement;
 
     let fromEl = document.createElement("h4");
-    fromEl.textContent = `From: ${messageValue.from}`;
+    fromEl.textContent = `From: ${endorsementData.from}`;
 
     let likeButton = document.createElement("i");
-    likeButton.className = `fa-heart like-button ${messageValue.likes && messageValue.likes[userId] ? 'fas liked' : 'far'}`;
+    likeButton.className = `fa-heart like-button ${endorsementData.likes && endorsementData.likes[userId] ? 'fas liked' : 'far'}`;
     likeButton.addEventListener("click", function (event) {
         event.stopPropagation();
-        toggleLike(messageID, messageValue.likes);
+        toggleLike(endorsementId, endorsementData.likes);
     });
 
     newDiv.addEventListener("dblclick", function () {
-        toggleLike(messageID, messageValue.likes);
+        toggleLike(endorsementId, endorsementData.likes);
     });
 
     newDiv.appendChild(toEl);
     newDiv.appendChild(endorsementEl);
     newDiv.appendChild(fromEl);
     newDiv.appendChild(likeButton);
+
     userEndorseEl.appendChild(newDiv);
 }
 
-function toggleLike(messageID, likes) {
+// Function to toggle like/unlike
+function toggleLike(endorsementId, likes) {
     if (!likes || !likes[userId]) {
+        // User hasn't liked, so like it
         const updates = {};
-        updates[`endorsementList/${messageID}/likes/${userId}`] = true;
+        updates[`endorsementList/${endorsementId}/likes/${userId}`] = true;
         update(ref(database), updates);
     } else {
+        // User already liked, so unlike it
         const updates = {};
-        updates[`endorsementList/${messageID}/likes/${userId}`] = null;
+        updates[`endorsementList/${endorsementId}/likes/${userId}`] = null;
         update(ref(database), updates);
     }
 }
