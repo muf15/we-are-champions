@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     background-color: #1b1924;
@@ -41,10 +42,11 @@ input:focus {
 }
 
 input::placeholder {
-    color: #aaa;  
+    color: #aaa;
 }
 
-#input-from, #input-to {
+#input-from,
+#input-to {
     margin-top: 10px;
     background-color: #444158;
     color: #fffefe;
@@ -59,7 +61,8 @@ input::placeholder {
 
 #publish {
     background-color: #28a9f1;
-    color: #1b1924; /* Adjusted text color */
+    color: #1b1924;
+    /* Adjusted text color */
     border-radius: 5px;
     border: none;
     width: 320px;
@@ -94,7 +97,7 @@ input::placeholder {
 
 .full-message {
     background-color: #fffefe;
-    color: #1b1924;  
+    color: #1b1924;
     border-radius: 2px;
     font-weight: lighter;
     cursor: pointer;
@@ -106,17 +109,20 @@ input::placeholder {
 }
 
 .full-message:hover {
-    background-color: #444158; /* Adjusted hover color */
+    background-color: #444158;
+    /* Adjusted hover color */
 }
 
-h4, p {
+h4,
+p {
     margin: 0 10px;
     padding: 4px;
     text-align: left;
 }
 
 #empty-message {
-    color: #ccc; /* Adjusted text color */
+    color: #ccc;
+    /* Adjusted text color */
     font-size: 14px;
 }
 
@@ -131,12 +137,14 @@ h4, p {
 .like-button {
     font-size: 24px;
     cursor: pointer;
-    color: #ff4500; /* Adjusted color for unliked state */
+    color: #ff4500;
+    /* Adjusted color for unliked state */
     transition: color 0.3s ease;
 }
 
 .like-button.liked {
-    color: #dc143c; /* Adjusted color for liked state */
+    color: #dc143c;
+    /* Adjusted color for liked state */
 }
 
 .like-count {
